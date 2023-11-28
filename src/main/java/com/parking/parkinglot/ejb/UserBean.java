@@ -1,6 +1,5 @@
 package com.parking.parkinglot.ejb;
 import com.parking.parkinglot.common.UserDto;
-import com.parking.parkinglot.Users;
 import com.parking.parkinglot.entities.User;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.Stateless;
@@ -35,7 +34,8 @@ public class UserBean {
         for (User user : users) {
             UserDto userDto = new UserDto(
                     user.getUsername(),
-                    user.getEmail()
+                    user.getEmail(),
+                    Math.toIntExact(user.getId())
             );
             userDtoList.add(userDto);
         }
