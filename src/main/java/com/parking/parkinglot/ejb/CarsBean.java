@@ -20,6 +20,22 @@ public class CarsBean {
     @PersistenceContext
     EntityManager entityManager;
 
+    public void updateCar(Long carId, String licensePlate, String parkingSpot,Long userId) {
+        LOG.info("updateCar");
+        Car car = entityManager.find(Car.class, carId);
+        car.setLicensePlate(licensePlate);
+        car.setParkingSpot(parkingSpot);
+
+        User oldUser = car.getOwner();
+        oldUser.getCars().remove(car);
+
+
+        User user = entityManager.find(User.class, userId);
+        user.getCars().add(car);
+        car.setOwner(user);
+
+    }
+
     public List<CarDto> findAllCars(){
         LOG.info("find all cars");
         try {
@@ -47,6 +63,7 @@ public class CarsBean {
 
     public void createCar(String licensePlate, String parkingSpot, Long userId){
         LOG.info("createCar");
+
         Car car = new Car();
         car.setLicensePlate(licensePlate);
         car.setParkingSpot(parkingSpot);
@@ -74,6 +91,14 @@ public class CarsBean {
             }
         } catch (Exception ex) {
             throw new EJBException(ex);
+        }
+    }
+
+    public void deleteCarsByIds(List<Long> carIds) {
+        LOG.info("deleteCarsByIds");
+        for (Long carId : carIds) {
+            Car car = entityManager.find(Car.class, carId);
+            entityManager.remove(car);
         }
     }
 }
