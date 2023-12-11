@@ -12,7 +12,7 @@
             <c:forEach var="car" items="${cars}">
                 <div class="row">
                     <div class="col">
-                        <label for="car_ids">
+                        <label>
                             <input type="checkbox" name="car_ids" value="${car.id}" />
                         </label>
                     </div>
