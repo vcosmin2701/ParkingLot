@@ -1,53 +1,45 @@
-<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<t:pageTemplate pageTitle="AddUser">
-    <h1>Add User</h1>
-    <form class="needs-validation" novalidate method="POST" action="${pageContext.request.contextPath}/AddUser">
+<t:pageTemplate pageTitle="Add Car">
+    <h1>Add Car</h1>
+    <form class="needs-validation" novalidate method="post" action="${pageContext.request.contextPath}/AddCar">
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" name="username" id="username" placeholder="" value="" required="">
+                <label for="license_plate">License Plate</label>
+                <input type="text" class="form-control" id="license_plate" name="license_plate" placeholder="" value="" required>
                 <div class="invalid-feedback">
-                    Username is required.
+                    License Plate is required
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" name="email" id="email" placeholder="" value="" required="">
+                <label for="parking-spot">Parking Spot</label>
+                <input type="text" class="form-control" id="parking-spot"  name="parking-spot" placeholder="" value="" required>
                 <div class="invalid-feedback">
-                    Email is required.
+                    Parking Spot is required
                 </div>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" id="password" placeholder="" value="" required="">
-                <div class="invalid-feedback">
-                    Password is required.
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="user_groups">Groups</label>
-                <select class="form-select custom-select d-block w-100" id="user_groups" name="user_groups" multiple required>
+                <label for="owner_id" class="form-label">Owner</label>
+                <select class="custom-select d-block w-100" id="owner_id" name="owner_id" required>
                     <option value="">Choose...</option>
-                    <c:forEach var="user_group" items="${userGroups}" varStatus="status">
-                        <option value="${user_group}">${user_group}</option>
+                    <c:forEach var="user" items="${users}" varStatus="status">
+                        <option value="${user.id}">${user.username}</option>
                     </c:forEach>
                 </select>
                 <div class="invalid-feedback">
-                    User Group is required.
+                    Please select a valid admin.
                 </div>
             </div>
         </div>
-        <button class="btn btn-primary btn-lg" type="submit">Save
-        </button>
-    </form>
 
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
 </t:pageTemplate>

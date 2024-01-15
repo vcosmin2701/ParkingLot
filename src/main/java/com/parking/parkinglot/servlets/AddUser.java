@@ -17,7 +17,8 @@ public class AddUser extends HttpServlet {
     UserBean usersBean;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("userGroups", new String[] {"READ_CARS", "WRITE_CARS", "READ_USERS", "WRITE_USERS"});
+        request.setAttribute("userGroups", new String[] {"READ_CARS", "WRITE_CARS", "READ_USERS",
+                "WRITE_USERS", "INVOICING"});
         request.getRequestDispatcher("/WEB-INF/pages/addUser.jsp").forward(request, response);
     }
 
