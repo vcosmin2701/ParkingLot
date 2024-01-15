@@ -18,35 +18,48 @@ import java.util.logging.Logger;
 public class UserBean {
     private static final Logger LOG = Logger.getLogger(UserBean.class.getName());
 
+    @Inject
+    PasswordBean passwordBean;
+
     @PersistenceContext
     EntityManager entityManager;
 
-    public List<UserDto> findAllUsers(){
-        LOG.info("find all users");
+    public List<UserDto> findAllUsers() {
+        LOG.info("findAllUsers");
         try {
-            TypedQuery<User> typedQuery = entityManager.createQuery("SELECT usr FROM User usr", User.class);
+            TypedQuery<User> typedQuery = entityManager.createQuery("SELECT u FROM User u", User.class);
             List<User> users = typedQuery.getResultList();
+
             return copyUsersToDto(users);
         } catch (Exception ex) {
             throw new EJBException(ex);
         }
     }
 
-    private List<UserDto> copyUsersToDto(List<User> users) {
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (User user : users) {
-            UserDto userDto = new UserDto(
-                    user.getUsername(),
-                    user.getEmail(),
-                    Math.toIntExact(user.getId())
-            );
-            userDtoList.add(userDto);
-        }
-        return userDtoList;
+    public Collection<String> findUsernameByUserIds(Collection<Long> userIds){
+        List<String> usernames= entityManager.createQuery("SELECT u.username FROM User u WHERE u.id IN :userIds", String.class)
+                .setParameter("userIds", userIds)
+                .getResultList();
+
+        return  usernames;
     }
 
-    @Inject
-    PasswordBean passwordBean;
+    public UserDto findById(Long id){
+        LOG.info("findById"+id);
+        User user = entityManager.find(User.class, id);
+
+        return user == null ? null : new UserDto(id, user.getUsername(), user.getEmail());
+    }
+
+    public void updatePassword(Long userId, String password){
+        LOG.info("updatePassword");
+        User user = entityManager.find(User.class, userId);
+
+        if (user != null) {
+            user.setPassword(passwordBean.convertToSha256(password));
+        }
+    }
+
     public void createUser(String username, String email, String password, Collection<String> groups) {
         LOG.info("createUser");
         User newUser = new User();
@@ -56,6 +69,7 @@ public class UserBean {
         entityManager.persist(newUser);
         assignGroupsToUser(username, groups);
     }
+
     private void assignGroupsToUser(String username, Collection<String> groups) {
         LOG.info("assignGroupsToUser");
         for (String group : groups) {
@@ -64,5 +78,14 @@ public class UserBean {
             userGroup.setUserGroup(group);
             entityManager.persist(userGroup);
         }
+    }
+
+    private List<UserDto> copyUsersToDto(List<User> users) {
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : users) {
+            userDtos.add(new UserDto(user.getId(), user.getUsername(), user.getEmail()));
+        }
+
+        return userDtos;
     }
 }
