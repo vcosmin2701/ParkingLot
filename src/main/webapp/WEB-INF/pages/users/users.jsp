@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@taglib prefix="t" tagdir="/WEB-INF/tags"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <t:pageTemplate pageTitle="Users">
     <h1> Users</h1>
@@ -9,7 +9,7 @@
                 User</a>
 
         </c:if>
-        <button  class="btn btn-secondary " type="submit">Invoice</button>
+        <button class="btn btn-secondary " type="submit">Invoice</button>
         <div class="container text-center">
             <c:forEach var="user" items="${users}">
                 <div class="row">
@@ -24,7 +24,11 @@
 
                     <div class="col">
                             ${user.email}
-                    </div> </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <a class="btn btn-primary" href="${pageContext.request.contextPath}/editUser?id=${user.id}">Edit</a>
+                </div>
             </c:forEach>
         </div>
     </form>
